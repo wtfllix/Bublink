@@ -13,13 +13,13 @@ chromium_args=(
 )
 
 if [[ -n "${DISPLAY:-}" ]]; then
-  chromium_args+=(file://$HOME/kiosk/index.html)
+  chromium_args+=(file://$HOME/Bublink/dist/index.html)
 else
   chromium_args+=(
     --ozone-platform=wayland
     --disable-features=UsePreferredIntervalForVideo
     --disable-frame-rate-limit
-    file://$HOME/kiosk/index.html
+    file://$HOME/Bublink/dist/index.html
   )
 fi
 
