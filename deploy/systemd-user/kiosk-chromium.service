@@ -1,6 +1,8 @@
 [Unit]
 Description=Chromium Kiosk
 After=graphical-session.target
+After=kiosk-server.service
+Wants=kiosk-server.service
 
 [Service]
 Type=simple

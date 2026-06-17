@@ -10,6 +10,7 @@ install -m 644 "$script_dir/systemd-user/"*.service "$HOME/.config/systemd/user/
 install -m 644 "$script_dir/systemd-user/"*.timer "$HOME/.config/systemd/user/"
 
 systemctl --user daemon-reload
+systemctl --user enable kiosk-server.service
 systemctl --user enable kiosk-chromium.service
 systemctl --user enable --now kiosk-morning.timer
 systemctl --user enable --now kiosk-night.timer

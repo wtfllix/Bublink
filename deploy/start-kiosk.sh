@@ -13,4 +13,4 @@ exec chromium \
   --ozone-platform=wayland \
   --disable-features=UsePreferredIntervalForVideo \
   --disable-frame-rate-limit \
-  "file://$HOME/Bublink/dist/index.html"
+  "http://127.0.0.1:4173"
