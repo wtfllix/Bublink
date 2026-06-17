@@ -48,6 +48,11 @@ select {
     linear-gradient(135deg, #f8f4eb 0%, #eaf2ef 47%, #f3e2d9 100%);
 }
 
+.kiosk-shell::before {
+  display: none !important;
+  content: none !important;
+}
+
 .ambient {
   position: absolute;
   border-radius: 999px;
