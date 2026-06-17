@@ -1,27 +1,22 @@
 import { CloudSun, Droplets, Sun, ThermometerSun, Umbrella } from "lucide-react";
-import Matter from "matter-js";
 import { motion } from "motion/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { departureAdvice, weatherSnapshot } from "./data/dashboard";
 
 type BubbleId = "clock" | "weather" | "advice";
-
-type BubbleFrame = {
-  id: BubbleId;
-  x: number;
-  y: number;
-  angle: number;
-};
 
 type BubbleDefinition = {
   id: BubbleId;
   className: string;
   width: number;
   height: number;
-  radius: number;
   x: number;
   y: number;
-  mass: number;
+  driftX: number;
+  driftY: number;
+  driftRotate: number;
+  duration: number;
+  delay: number;
 };
 
 function getBubbleDefinitions(width: number, height: number): BubbleDefinition[] {
@@ -36,30 +31,39 @@ function getBubbleDefinitions(width: number, height: number): BubbleDefinition[]
         className: "bubble-clock",
         width: 235 * scale,
         height: 150 * scale,
-        radius: 112 * scale,
         x: width * 0.35,
         y: height * 0.22,
-        mass: 1,
+        driftX: 10 * scale,
+        driftY: 8 * scale,
+        driftRotate: 1.2,
+        duration: 7.6,
+        delay: -1.4,
       },
       {
         id: "weather",
         className: "bubble-weather",
         width: 285 * scale,
         height: 330 * scale,
-        radius: 168 * scale,
         x: width * 0.62,
         y: height * 0.47,
-        mass: 1.45,
+        driftX: 12 * scale,
+        driftY: 10 * scale,
+        driftRotate: -1,
+        duration: 8.4,
+        delay: -3.1,
       },
       {
         id: "advice",
         className: "bubble-advice",
         width: Math.min(width * 0.86, 560 * scale),
         height: 185 * scale,
-        radius: 235 * scale,
         x: width * 0.5,
         y: height * 0.78,
-        mass: 1.8,
+        driftX: 14 * scale,
+        driftY: 7 * scale,
+        driftRotate: 0.8,
+        duration: 9.2,
+        delay: -2.2,
       },
     ];
   }
@@ -70,30 +74,39 @@ function getBubbleDefinitions(width: number, height: number): BubbleDefinition[]
       className: "bubble-clock",
       width: 260 * scale,
       height: 160 * scale,
-      radius: 123 * scale,
       x: width * 0.23,
       y: height * 0.25,
-      mass: 1,
+      driftX: 12 * scale,
+      driftY: 9 * scale,
+      driftRotate: 1.1,
+      duration: 8,
+      delay: -1.2,
     },
     {
       id: "weather",
       className: "bubble-weather",
       width: 320 * scale,
       height: 385 * scale,
-      radius: 190 * scale,
       x: width * 0.52,
       y: height * 0.38,
-      mass: 1.5,
+      driftX: 14 * scale,
+      driftY: 11 * scale,
+      driftRotate: -0.9,
+      duration: 8.8,
+      delay: -3.4,
     },
     {
       id: "advice",
       className: "bubble-advice",
       width: 560 * scale,
       height: 210 * scale,
-      radius: 280 * scale,
       x: width * 0.67,
       y: height * 0.72,
-      mass: 2,
+      driftX: 16 * scale,
+      driftY: 8 * scale,
+      driftRotate: 0.7,
+      duration: 9.8,
+      delay: -2.6,
     },
   ];
 }
@@ -108,102 +121,6 @@ function useWindowSize() {
   }, []);
 
   return size;
-}
-
-function useBubblePhysics(definitions: BubbleDefinition[], width: number, height: number) {
-  const [frames, setFrames] = useState<BubbleFrame[]>(() =>
-    definitions.map((definition) => ({
-      id: definition.id,
-      x: definition.x,
-      y: definition.y,
-      angle: 0,
-    })),
-  );
-  const bodiesRef = useRef<Map<BubbleId, Matter.Body>>(new Map());
-
-  useEffect(() => {
-    const engine = Matter.Engine.create({ gravity: { x: 0, y: 0, scale: 0 } });
-    const runner = Matter.Runner.create();
-    const margin = 52;
-
-    const walls = [
-      Matter.Bodies.rectangle(width / 2, -margin, width + margin * 2, margin * 2, { isStatic: true }),
-      Matter.Bodies.rectangle(width / 2, height + margin, width + margin * 2, margin * 2, { isStatic: true }),
-      Matter.Bodies.rectangle(-margin, height / 2, margin * 2, height + margin * 2, { isStatic: true }),
-      Matter.Bodies.rectangle(width + margin, height / 2, margin * 2, height + margin * 2, { isStatic: true }),
-    ];
-
-    const bodies = definitions.map((definition, index) => {
-      const body = Matter.Bodies.circle(definition.x, definition.y, definition.radius, {
-        friction: 0,
-        frictionAir: 0.038,
-        restitution: 0.96,
-        density: 0.0008,
-        label: definition.id,
-      });
-
-      Matter.Body.setMass(body, definition.mass);
-      Matter.Body.setVelocity(body, {
-        x: (index + 1) * 0.32 * (index % 2 === 0 ? 1 : -1),
-        y: (index + 1) * 0.18,
-      });
-      bodiesRef.current.set(definition.id, body);
-      return body;
-    });
-
-    Matter.Composite.add(engine.world, [...walls, ...bodies]);
-    Matter.Runner.run(runner, engine);
-
-    let animationFrame = 0;
-    let tick = 0;
-
-    const animate = () => {
-      tick += 1;
-
-      bodies.forEach((body, index) => {
-        const phase = tick / 95 + index * 1.7;
-        Matter.Body.applyForce(body, body.position, {
-          x: Math.cos(phase) * 0.00028 * body.mass,
-          y: Math.sin(phase * 0.9) * 0.00022 * body.mass,
-        });
-        Matter.Body.setAngularVelocity(body, Math.sin(phase) * 0.002);
-      });
-
-      setFrames(
-        bodies.map((body) => ({
-          id: body.label as BubbleId,
-          x: body.position.x,
-          y: body.position.y,
-          angle: body.angle,
-        })),
-      );
-
-      animationFrame = window.requestAnimationFrame(animate);
-    };
-
-    animationFrame = window.requestAnimationFrame(animate);
-
-    return () => {
-      window.cancelAnimationFrame(animationFrame);
-      Matter.Runner.stop(runner);
-      Matter.Engine.clear(engine);
-      bodiesRef.current.clear();
-    };
-  }, [definitions, height, width]);
-
-  const nudge = (id: BubbleId) => {
-    const body = bodiesRef.current.get(id);
-    if (!body) {
-      return;
-    }
-
-    Matter.Body.applyForce(body, body.position, {
-      x: (Math.random() - 0.5) * 0.035 * body.mass,
-      y: -0.026 * body.mass,
-    });
-  };
-
-  return { frames, nudge };
 }
 
 function ClockBubble() {
@@ -278,9 +195,6 @@ function AdviceBubble() {
 function App() {
   const { width, height } = useWindowSize();
   const definitions = useMemo(() => getBubbleDefinitions(width, height), [height, width]);
-  const { frames, nudge } = useBubblePhysics(definitions, width, height);
-
-  const frameById = new Map(frames.map((frame) => [frame.id, frame]));
 
   return (
     <main className="kiosk-shell">
@@ -290,7 +204,6 @@ function App() {
 
       <section className="bubble-stage" aria-label="玄关天气信息">
         {definitions.map((definition) => {
-          const frame = frameById.get(definition.id);
           const content =
             definition.id === "clock" ? (
               <ClockBubble />
@@ -305,16 +218,33 @@ function App() {
               animate={{
                 opacity: 1,
                 scale: 1,
-                x: (frame?.x ?? definition.x) - definition.width / 2,
-                y: (frame?.y ?? definition.y) - definition.height / 2,
-                rotate: (frame?.angle ?? 0) * 16,
+                x: [
+                  definition.x - definition.width / 2 - definition.driftX,
+                  definition.x - definition.width / 2 + definition.driftX,
+                  definition.x - definition.width / 2 - definition.driftX,
+                ],
+                y: [
+                  definition.y - definition.height / 2 + definition.driftY,
+                  definition.y - definition.height / 2 - definition.driftY,
+                  definition.y - definition.height / 2 + definition.driftY,
+                ],
+                rotate: [-definition.driftRotate, definition.driftRotate, -definition.driftRotate],
               }}
               className={`info-bubble ${definition.className}`}
               initial={{ opacity: 0, scale: 0.88 }}
               key={definition.id}
-              onPointerDown={() => nudge(definition.id)}
               style={{ width: definition.width, height: definition.height }}
-              transition={{ type: "spring", stiffness: 68, damping: 18, mass: 0.7 }}
+              transition={{
+                default: {
+                  duration: definition.duration,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  delay: definition.delay,
+                },
+                opacity: { duration: 0.45, ease: "easeOut" },
+                scale: { duration: 0.45, ease: "easeOut" },
+              }}
             >
               {content}
             </motion.article>
