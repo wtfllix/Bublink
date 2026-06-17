@@ -21,17 +21,17 @@ type BubbleDefinition = {
   delay: number;
 };
 
-const layoutStorageKey = "kiosk-bubble-layout";
+const layoutStorageKey = "kiosk-bubble-layout-round-v1";
 
 const desktopLayout: BubbleLayout = {
-  clock: { x: 0.23, y: 0.73 },
+  clock: { x: 0.24, y: 0.72 },
   weather: { x: 0.29, y: 0.34 },
-  advice: { x: 0.68, y: 0.48 },
+  advice: { x: 0.7, y: 0.48 },
 };
 
 const compactLayout: BubbleLayout = {
-  clock: { x: 0.36, y: 0.24 },
-  weather: { x: 0.62, y: 0.48 },
+  clock: { x: 0.35, y: 0.22 },
+  weather: { x: 0.62, y: 0.47 },
   advice: { x: 0.5, y: 0.77 },
 };
 
@@ -73,8 +73,8 @@ function getBubbleDefinitions(width: number, height: number, layout: BubbleLayou
       {
         id: "clock",
         className: "bubble-clock",
-        width: 235 * scale,
-        height: 150 * scale,
+        width: 210 * scale,
+        height: 210 * scale,
         x: width * layout.clock.x,
         y: height * layout.clock.y,
         driftX: 10 * scale,
@@ -86,8 +86,8 @@ function getBubbleDefinitions(width: number, height: number, layout: BubbleLayou
       {
         id: "weather",
         className: "bubble-weather",
-        width: 285 * scale,
-        height: 330 * scale,
+        width: 310 * scale,
+        height: 310 * scale,
         x: width * layout.weather.x,
         y: height * layout.weather.y,
         driftX: 12 * scale,
@@ -99,8 +99,8 @@ function getBubbleDefinitions(width: number, height: number, layout: BubbleLayou
       {
         id: "advice",
         className: "bubble-advice",
-        width: Math.min(width * 0.86, 560 * scale),
-        height: 185 * scale,
+        width: Math.min(width * 0.78, 330 * scale),
+        height: Math.min(width * 0.78, 330 * scale),
         x: width * layout.advice.x,
         y: height * layout.advice.y,
         driftX: 14 * scale,
@@ -116,8 +116,8 @@ function getBubbleDefinitions(width: number, height: number, layout: BubbleLayou
     {
       id: "clock",
       className: "bubble-clock",
-      width: 260 * scale,
-      height: 160 * scale,
+      width: 245 * scale,
+      height: 245 * scale,
       x: width * layout.clock.x,
       y: height * layout.clock.y,
       driftX: 12 * scale,
@@ -129,8 +129,8 @@ function getBubbleDefinitions(width: number, height: number, layout: BubbleLayou
     {
       id: "weather",
       className: "bubble-weather",
-      width: 320 * scale,
-      height: 385 * scale,
+      width: 370 * scale,
+      height: 370 * scale,
       x: width * layout.weather.x,
       y: height * layout.weather.y,
       driftX: 14 * scale,
@@ -142,8 +142,8 @@ function getBubbleDefinitions(width: number, height: number, layout: BubbleLayou
     {
       id: "advice",
       className: "bubble-advice",
-      width: 560 * scale,
-      height: 210 * scale,
+      width: 350 * scale,
+      height: 350 * scale,
       x: width * layout.advice.x,
       y: height * layout.advice.y,
       driftX: 16 * scale,
