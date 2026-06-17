@@ -5,6 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f6f3ec" />
     <title>玄关天气泡泡</title>
+    <script>
+      (() => {
+        const messages = [];
+        const show = () => {
+          let panel = document.getElementById("kiosk-boot-errors");
+          if (!panel) {
+            panel = document.createElement("pre");
+            panel.id = "kiosk-boot-errors";
+            panel.style.cssText =
+              "position:fixed;inset:16px;z-index:2147483647;margin:0;padding:16px;overflow:auto;background:#1f1f1f;color:#fff;font:14px/1.45 monospace;white-space:pre-wrap;";
+            document.body.appendChild(panel);
+          }
+          panel.textContent = messages.join("\n");
+        };
+        const push = (message) => {
+          messages.push(`[${new Date().toISOString()}] ${message}`);
+          try {
+            localStorage.setItem("kiosk-boot-errors", messages.join("\n"));
+          } catch {
+            // Ignore storage failures; the on-screen message is the useful part.
+          }
+          if (document.body) {
+            show();
+          } else {
+            window.addEventListener("DOMContentLoaded", show, { once: true });
+          }
+        };
+
+        window.addEventListener("error", (event) => {
+          const target = event.target;
+          if (target && target !== window && "tagName" in target) {
+            push(`Resource failed: ${target.tagName} ${(target.src || target.href || "").toString()}`);
+            return;
+          }
+          push(`Error: ${event.message} ${event.filename || ""}:${event.lineno || 0}:${event.colno || 0}`);
+        }, true);
+
+        window.addEventListener("unhandledrejection", (event) => {
+          push(`Unhandled rejection: ${event.reason?.stack || event.reason}`);
+        });
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
