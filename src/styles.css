@@ -94,14 +94,26 @@ select {
   height: 100%;
 }
 
-.info-bubble {
+.bubble-anchor {
   position: absolute;
   left: 0;
   top: 0;
+  cursor: grab;
+  touch-action: none;
+}
+
+.bubble-anchor:active {
+  cursor: grabbing;
+}
+
+.info-bubble {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   display: grid;
   place-items: center;
   color: var(--ink);
-  cursor: grab;
   isolation: isolate;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.58);
@@ -114,11 +126,6 @@ select {
     0 18px 50px rgba(55, 48, 38, 0.1);
   backdrop-filter: blur(18px) saturate(1.16);
   -webkit-backdrop-filter: blur(18px) saturate(1.16);
-  touch-action: none;
-}
-
-.info-bubble:active {
-  cursor: grabbing;
 }
 
 .info-bubble::before {
@@ -160,6 +167,10 @@ select {
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(255, 230, 197, 0.34)),
     rgba(255, 255, 255, 0.54);
+}
+
+.bubble-drift {
+  will-change: transform;
 }
 
 .bubble-content {
@@ -296,6 +307,29 @@ select {
   color: #5d6a62;
   font-size: clamp(0.68rem, 0.82vw, 0.8rem);
   font-weight: 740;
+}
+
+.layout-reset {
+  position: absolute;
+  right: max(6vw, 2rem);
+  bottom: max(6vh, 1.6rem);
+  min-height: 2.25rem;
+  padding: 0 0.9rem;
+  border: 1px solid rgba(65, 58, 48, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.44);
+  color: rgba(43, 41, 36, 0.72);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(55, 48, 38, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.layout-reset:hover {
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--ink);
 }
 
 @keyframes float-ambient {
