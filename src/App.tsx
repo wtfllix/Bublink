@@ -303,6 +303,8 @@ function App() {
           return (
             <motion.article
               animate={{
+                opacity: 1,
+                scale: 1,
                 x: (frame?.x ?? definition.x) - definition.width / 2,
                 y: (frame?.y ?? definition.y) - definition.height / 2,
                 rotate: (frame?.angle ?? 0) * 16,
