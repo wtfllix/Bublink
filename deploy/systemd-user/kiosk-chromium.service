@@ -1,0 +1,12 @@
+[Unit]
+Description=Chromium Kiosk
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/bin/start-kiosk.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

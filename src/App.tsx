@@ -14,11 +14,6 @@ type BubbleDefinition = {
   height: number;
   x: number;
   y: number;
-  driftX: number;
-  driftY: number;
-  driftRotate: number;
-  duration: number;
-  delay: number;
 };
 
 const layoutStorageKey = "kiosk-bubble-layout-round-v1";
@@ -77,11 +72,6 @@ function getBubbleDefinitions(width: number, height: number, layout: BubbleLayou
         height: 210 * scale,
         x: width * layout.clock.x,
         y: height * layout.clock.y,
-        driftX: 10 * scale,
-        driftY: 8 * scale,
-        driftRotate: 1.2,
-        duration: 7.6,
-        delay: -1.4,
       },
       {
         id: "weather",
@@ -90,11 +80,6 @@ function getBubbleDefinitions(width: number, height: number, layout: BubbleLayou
         height: 310 * scale,
         x: width * layout.weather.x,
         y: height * layout.weather.y,
-        driftX: 12 * scale,
-        driftY: 10 * scale,
-        driftRotate: -1,
-        duration: 8.4,
-        delay: -3.1,
       },
       {
         id: "advice",
@@ -103,11 +88,6 @@ function getBubbleDefinitions(width: number, height: number, layout: BubbleLayou
         height: Math.min(width * 0.78, 330 * scale),
         x: width * layout.advice.x,
         y: height * layout.advice.y,
-        driftX: 14 * scale,
-        driftY: 7 * scale,
-        driftRotate: 0.8,
-        duration: 9.2,
-        delay: -2.2,
       },
     ];
   }
@@ -120,11 +100,6 @@ function getBubbleDefinitions(width: number, height: number, layout: BubbleLayou
       height: 245 * scale,
       x: width * layout.clock.x,
       y: height * layout.clock.y,
-      driftX: 12 * scale,
-      driftY: 9 * scale,
-      driftRotate: 1.1,
-      duration: 8,
-      delay: -1.2,
     },
     {
       id: "weather",
@@ -133,11 +108,6 @@ function getBubbleDefinitions(width: number, height: number, layout: BubbleLayou
       height: 370 * scale,
       x: width * layout.weather.x,
       y: height * layout.weather.y,
-      driftX: 14 * scale,
-      driftY: 11 * scale,
-      driftRotate: -0.9,
-      duration: 8.8,
-      delay: -3.4,
     },
     {
       id: "advice",
@@ -146,11 +116,6 @@ function getBubbleDefinitions(width: number, height: number, layout: BubbleLayou
       height: 350 * scale,
       x: width * layout.advice.x,
       y: height * layout.advice.y,
-      driftX: 16 * scale,
-      driftY: 8 * scale,
-      driftRotate: 0.7,
-      duration: 9.8,
-      delay: -2.6,
     },
   ];
 }
@@ -307,23 +272,9 @@ function App() {
               transition={{ type: "spring", stiffness: 120, damping: 24, mass: 0.7 }}
               whileDrag={{ scale: 1.03 }}
             >
-              <motion.div
-                animate={{
-                  x: [-definition.driftX, definition.driftX, -definition.driftX],
-                  y: [definition.driftY, -definition.driftY, definition.driftY],
-                  rotate: [-definition.driftRotate, definition.driftRotate, -definition.driftRotate],
-                }}
-                className={`info-bubble bubble-drift ${definition.className}`}
-                transition={{
-                  duration: definition.duration,
-                  ease: "easeInOut",
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  delay: definition.delay,
-                }}
-              >
+              <div className={`info-bubble ${definition.className}`}>
                 {content}
-              </motion.div>
+              </div>
             </motion.article>
           );
         })}

@@ -1,0 +1,7 @@
+[Unit]
+Description=Stop kiosk after morning run
+
+[Service]
+Type=oneshot
+ExecStart=systemctl --user stop kiosk-chromium.service
+ExecStartPost=swaymsg output "*" power off

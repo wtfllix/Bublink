@@ -1,0 +1,7 @@
+[Unit]
+Description=Start kiosk in the morning
+
+[Service]
+Type=oneshot
+ExecStart=swaymsg output "*" power on
+ExecStartPost=systemctl --user start kiosk-chromium.service
