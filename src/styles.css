@@ -48,15 +48,6 @@ select {
     linear-gradient(135deg, #f8f4eb 0%, #eaf2ef 47%, #f3e2d9 100%);
 }
 
-.kiosk-shell::before {
-  position: absolute;
-  inset: 5.2vh 4.8vw;
-  content: "";
-  border: 2px solid rgba(42, 39, 34, 0.2);
-  border-radius: clamp(32px, 4.2vw, 58px);
-  pointer-events: none;
-}
-
 .ambient {
   position: absolute;
   border-radius: 999px;
@@ -122,7 +113,7 @@ select {
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.46);
   background:
-    radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.28) 34%, transparent 66%),
+    radial-gradient(ellipse at 30% 22%, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.18) 28%, transparent 56%),
     radial-gradient(circle at 72% 76%, rgba(255, 230, 190, 0.2), transparent 50%),
     linear-gradient(145deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.18)),
     var(--glass);
@@ -137,16 +128,7 @@ select {
 }
 
 .info-bubble::before {
-  position: absolute;
-  inset: 1px;
-  z-index: -1;
-  content: "";
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: inherit;
-  opacity: 0.42;
-  box-shadow:
-    inset 0 0 18px rgba(255, 255, 255, 0.12),
-    inset 0 -12px 22px rgba(120, 140, 132, 0.035);
+  display: none;
 }
 
 .info-bubble::after {
@@ -167,7 +149,7 @@ select {
 .bubble-clock {
   border-radius: 50%;
   background:
-    radial-gradient(circle at 34% 22%, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.22) 34%, transparent 70%),
+    radial-gradient(ellipse at 33% 22%, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.16) 30%, transparent 58%),
     radial-gradient(circle at 72% 76%, rgba(255, 203, 161, 0.2), transparent 54%),
     linear-gradient(150deg, rgba(255, 250, 240, 0.72), rgba(246, 229, 218, 0.26)),
     rgba(255, 255, 255, 0.5);
@@ -176,7 +158,7 @@ select {
 .bubble-weather {
   border-radius: 50%;
   background:
-    radial-gradient(circle at 33% 23%, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.2) 34%, transparent 70%),
+    radial-gradient(ellipse at 32% 23%, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.16) 30%, transparent 58%),
     radial-gradient(circle at 68% 78%, rgba(117, 198, 184, 0.22), transparent 56%),
     radial-gradient(circle at 78% 22%, rgba(255, 194, 96, 0.16), transparent 52%),
     linear-gradient(150deg, rgba(255, 255, 255, 0.76), rgba(218, 244, 239, 0.32)),
@@ -186,7 +168,7 @@ select {
 .bubble-advice {
   border-radius: 50%;
   background:
-    radial-gradient(circle at 32% 22%, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.2) 34%, transparent 70%),
+    radial-gradient(ellipse at 31% 22%, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.16) 30%, transparent 58%),
     radial-gradient(circle at 74% 72%, rgba(246, 178, 142, 0.2), transparent 56%),
     radial-gradient(circle at 26% 82%, rgba(178, 215, 203, 0.15), transparent 50%),
     linear-gradient(145deg, rgba(255, 252, 244, 0.74), rgba(255, 226, 211, 0.28)),
@@ -385,11 +367,6 @@ select {
 }
 
 @media (max-width: 760px) {
-  .kiosk-shell::before {
-    inset: 3.4vh 4.5vw;
-    border-radius: 30px;
-  }
-
   .advice-content {
     width: 78%;
     height: 78%;
